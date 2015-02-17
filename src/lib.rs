@@ -120,7 +120,7 @@ impl ImageHash {
 
     pub fn fingerprint<I: HashImage>(img: &I) -> u64 {
         let hash = HashType::DCT.hash(img, 8).to_bytes();
-        (&hash[]).read_le_u64().unwrap()
+        (&hash[]).read_be_u64().unwrap()
     }
 
     /// Create an `ImageHash` instance from the given Base64-encoded string.
