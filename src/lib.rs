@@ -35,6 +35,7 @@
 extern crate image;
 extern crate "rustc-serialize" as serialize;
 
+
 use self::dct::{dct_2d, crop_dct};
 
 use image::{
@@ -51,6 +52,8 @@ use image::{
 use serialize::base64::{ToBase64, STANDARD, FromBase64, FromBase64Error};
 
 use std::collections::Bitv;
+
+use std::old_io::Reader;
 
 const FILTER_TYPE: FilterType = FilterType::Nearest;
 
@@ -115,6 +118,11 @@ impl ImageHash {
         }
     }
 
+    pub fn fingerprint<I: HashImage>(img: &I) -> u64 {
+        let hash = HashType::DCT.hash(img, 8).to_bytes();
+        (&hash[]).read_le_u64().unwrap()
+    }
+
     /// Create an `ImageHash` instance from the given Base64-encoded string.
     /// ### Note:
     /// **Not** compatible with Base64-encoded strings created before `HashType` was added.
@@ -139,6 +147,7 @@ impl ImageHash {
 
         bytes.to_base64(STANDARD)
     }
+
 }
 
 /// An enum describing the hash algorithms that `img_hash` offers.
